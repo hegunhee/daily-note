@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:greenlist/core/themes/app_colors.dart';
 import 'package:greenlist/core/themes/app_spacing.dart';
 import 'package:greenlist/core/themes/app_typography.dart';
+import 'package:greenlist/features/schedule_form/screens/schedule_form_screen.dart';
 import 'package:greenlist/features/timeline/widgets/day_progress_card.dart';
 import 'package:greenlist/features/timeline/widgets/schedule_timeline_card.dart';
 import 'package:greenlist/features/timeline/widgets/timeline_empty_card.dart';
@@ -15,6 +16,7 @@ import 'package:greenlist/shared/util/schedule_calculator.dart';
 import 'package:greenlist/shared/util/schedule_labels.dart';
 import 'package:greenlist/shared/widgets/app_content_width.dart';
 import 'package:greenlist/shared/widgets/app_error_view.dart';
+import 'package:greenlist/shared/widgets/app_fill_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 메인 화면 — 고른 날짜의 일정을 시작 시각순 세로 타임라인으로 보여 줍니다.
@@ -26,7 +28,23 @@ class TimelineScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final book = ref.watch(scheduleProvider);
+    final colors = context.colors;
     return Scaffold(
+      floatingActionButton: book.hasValue
+          ? FloatingActionButton.extended(
+              onPressed: () => _openNew(context, ref),
+              backgroundColor: colors.primary,
+              foregroundColor: colors.onPrimary,
+              elevation: 2,
+              highlightElevation: 2,
+              shape: const StadiumBorder(),
+              icon: const Icon(Icons.add_rounded),
+              label: Text(
+                'timeline.add'.tr(),
+                style: AppTypography.labelLg.copyWith(color: colors.onPrimary),
+              ),
+            )
+          : null,
       body: SafeArea(
         bottom: false,
         child: switch (book) {
@@ -41,6 +59,13 @@ class TimelineScreen extends HookConsumerWidget {
       ),
     );
   }
+}
+
+/// 지금 보는 날짜로 새 일정 입력을 엽니다.
+void _openNew(BuildContext context, WidgetRef ref) {
+  Navigator.of(
+    context,
+  ).push(ScheduleFormScreen.route(initialDate: ref.read(selectedDateProvider)));
 }
 
 class _TimelineBody extends HookConsumerWidget {
@@ -132,7 +157,14 @@ class _TimelineBody extends HookConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
           if (schedules.isEmpty)
-            TimelineEmptyCard(isToday: isToday)
+            TimelineEmptyCard(
+              isToday: isToday,
+              action: AppFillButton(
+                label: 'timeline.add_first'.tr(),
+                icon: Icons.add_rounded,
+                onPressed: () => _openNew(context, ref),
+              ),
+            )
           else ...[
             DayProgressCard(
               tasks: subTasksOfAll(book.subTasks, schedules),
@@ -146,6 +178,9 @@ class _TimelineBody extends HookConsumerWidget {
                 tasks: subTasksOf(book.subTasks, schedule.id),
                 status: statusOf(schedule, now),
                 isLast: index == schedules.length - 1,
+                onEdit: () => Navigator.of(
+                  context,
+                ).push(ScheduleFormScreen.route(schedule: schedule)),
               ),
           ],
         ],

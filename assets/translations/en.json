@@ -13,7 +13,8 @@
       "minutes": "{} min",
       "hours": "{} h",
       "hours_minutes": "{} h {} min"
-    }
+    },
+    "today": "Today"
   },
   "schedule": {
     "status": {
@@ -57,6 +58,42 @@
       "title": "No schedules yet",
       "body_today": "Nothing planned for today.\nAdd a new goal or a break.",
       "body_other": "Nothing planned for this day.\nAdd a new goal or a break."
+    },
+    "add": "New schedule",
+    "add_first": "Add a schedule"
+  },
+  "sub_task": {
+    "add": "Add task",
+    "add_confirm": "Add",
+    "input_hint": "Type a task and press Enter",
+    "rename_title": "Rename task",
+    "delete": "Delete task",
+    "delete_confirm": "Delete '{}'?"
+  },
+  "schedule_form": {
+    "title_new": "New schedule",
+    "title_edit": "Edit schedule",
+    "reset": "Reset",
+    "field_title": "Title",
+    "title_hint": "What are you planning?",
+    "field_date": "Date",
+    "quick": {
+      "today": "Today ({})",
+      "tomorrow": "Tomorrow ({})",
+      "friday": "This Friday"
+    },
+    "field_time": "Time",
+    "start": "Start",
+    "end": "End",
+    "duration": "{} in total",
+    "field_tasks": "Tasks ({})",
+    "field_memo": "Memo",
+    "optional": "Optional",
+    "memo_hint": "Notes, links, things to bring",
+    "save": "Save schedule",
+    "error": {
+      "title": "Please enter a title.",
+      "time_range": "End time must be later than start time."
     }
   }
 }

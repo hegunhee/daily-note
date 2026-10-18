@@ -31,9 +31,8 @@ String _locale(BuildContext context) =>
 String fullDateLabel(BuildContext context, DateTime date) =>
     DateFormat.yMMMMEEEEd(_locale(context)).format(date);
 
-/// `5/14`
-String shortDateLabel(BuildContext context, DateTime date) =>
-    DateFormat.Md(_locale(context)).format(date);
+/// `5/14` — 빠른 날짜 칩처럼 좁은 자리의 날짜. 로케일과 상관없이 같은 모양입니다.
+String shortDateLabel(DateTime date) => '${date.month}/${date.day}';
 
 /// `수` 같은 짧은 요일
 String weekdayLabel(BuildContext context, DateTime date) =>

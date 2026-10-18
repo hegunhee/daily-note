@@ -13,7 +13,8 @@
       "minutes": "{}분",
       "hours": "{}시간",
       "hours_minutes": "{}시간 {}분"
-    }
+    },
+    "today": "오늘"
   },
   "schedule": {
     "status": {
@@ -57,6 +58,42 @@
       "title": "등록된 일정이 없습니다",
       "body_today": "오늘은 예정된 일정이 없어요.\n새로운 목표나 휴식 일정을 추가해보세요.",
       "body_other": "이 날은 예정된 일정이 없어요.\n새로운 목표나 휴식 일정을 추가해보세요."
+    },
+    "add": "새 일정 추가",
+    "add_first": "새 일정 추가하기"
+  },
+  "sub_task": {
+    "add": "작업 추가",
+    "add_confirm": "확인",
+    "input_hint": "새로운 세부 작업 입력 후 Enter",
+    "rename_title": "세부 작업 이름 수정",
+    "delete": "세부 작업 삭제",
+    "delete_confirm": "'{}' 작업을 삭제할까요?"
+  },
+  "schedule_form": {
+    "title_new": "새 일정",
+    "title_edit": "일정 수정",
+    "reset": "초기화",
+    "field_title": "일정 제목",
+    "title_hint": "무엇을 할 예정인가요?",
+    "field_date": "날짜",
+    "quick": {
+      "today": "오늘 ({})",
+      "tomorrow": "내일 ({})",
+      "friday": "이번 주 금요일"
+    },
+    "field_time": "시간",
+    "start": "시작",
+    "end": "종료",
+    "duration": "총 {} 소요 예정",
+    "field_tasks": "세부 작업 ({})",
+    "field_memo": "메모",
+    "optional": "선택 사항",
+    "memo_hint": "준비물, 참고 링크 등을 적어 두세요",
+    "save": "일정 저장하기",
+    "error": {
+      "title": "제목을 한 글자 이상 입력해 주세요.",
+      "time_range": "종료 시간은 시작 시간보다 늦어야 해요."
     }
   }
 }

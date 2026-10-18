@@ -30,7 +30,7 @@ lib/
 - 의존은 **`features → shared → core`** 한 방향(역방향 금지).
   - **core** : 의존성 없이 앱 전체에 적용되는 기능(테마·순수 유틸).
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
-- feature: `timeline`(메인 — 날짜별 시간순 타임라인). 하위 폴더는 필요해질 때 만듭니다.
+- feature: `timeline`(메인 — 날짜별 시간순 타임라인) · `schedule_form`(일정 등록·수정). 하위 폴더는 필요해질 때 만듭니다.
 
 ## 로컬 저장
 
@@ -54,6 +54,16 @@ lib/
   100%로 보이지 않게 99%에서 멈춥니다. 작업이 하나 이상 있고 모두 끝나면 "모든 작업 완료"로 표시합니다.
 - 지금 시각은 `clockProvider` 로 읽습니다. 테스트는 시안의 시각(`designNow`)으로 고정합니다.
 - 체크박스는 누르는 즉시 상태를 바꾸고 저장합니다. 저장에 실패하면 되돌립니다.
+
+## 입력 검증
+
+- 저장을 막는 사유는 `features/schedule_form/models/schedule_form_error.dart` 의 enum 과
+  `validateSchedule` 순수 함수로 찾습니다(제목 비어 있음 · 종료 ≤ 시작).
+- 시간 범위 오류는 고르는 즉시 시각 칸 아래에, 제목 오류는 저장을 한 번 눌러 본 뒤 제목 아래에
+  알립니다. 저장 실패는 저장 버튼 위에 둡니다.
+- 컨트롤러도 잘못된 시간 범위는 저장하지 않습니다(화면을 거치지 않는 호출 대비).
+- 폼의 세부 작업은 저장할 때 일정과 함께 한 번에 저장합니다. 그래서 폼 안에서 뺀 작업은
+  묻지 않고, 저장된 작업을 상세 화면에서 지울 때는 확인을 받습니다.
 
 ## 데이터 흐름
 
@@ -146,6 +156,7 @@ Stitch 시안입니다. 코드에서는 `lib/core/themes/` 가 단일 출처입�
 | `AppPressScale` · `AppTapRow` | 카드·아이콘 / 목록 줄의 누름 반응 |
 | `AppErrorView` · `InlineErrorText` | 조회 실패 + 다시 시도 / 입력·저장 오류 |
 | `confirmDelete` · `showNotice` · `promptRename` | 삭제 확인 · 알릴 자리가 없는 실패 안내 · 이름 고치기 |
+| `SubTaskTile` · `SubTaskInputField` | 세부 작업 한 줄(체크·이름 고치기·지우기) · 새 작업 입력칸 |
 | `confirmDeleteSchedule` · `toggleSubTask` … | 여러 화면이 쓰는 일정 동작 + 실패 안내 |
 
 ## 다국어
