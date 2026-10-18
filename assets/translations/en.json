@@ -1,5 +1,62 @@
 {
   "common": {
-    "app_name": "Greenlist"
+    "app_name": "Greenlist",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close",
+    "save": "Save",
+    "retry": "Retry",
+    "load_failed": "Couldn't load your schedules.",
+    "save_failed": "Couldn't save. Please try again in a moment.",
+    "delete_failed": "Couldn't delete. Please try again in a moment.",
+    "duration": {
+      "minutes": "{} min",
+      "hours": "{} h",
+      "hours_minutes": "{} h {} min"
+    }
+  },
+  "schedule": {
+    "status": {
+      "done": "Done",
+      "upcoming": "Upcoming",
+      "inProgress": "NOW",
+      "past": "Past"
+    },
+    "tasks_done": "{}/{} tasks done",
+    "all_done": "All tasks done",
+    "no_tasks": "No tasks",
+    "menu": {
+      "more": "More",
+      "edit": "Edit",
+      "complete": "Mark as done",
+      "uncomplete": "Mark as not done",
+      "delete": "Delete schedule"
+    },
+    "delete_confirm": "Delete '{}'?\nIts tasks and memo will be deleted too."
+  },
+  "timeline": {
+    "brand_caption": "Today",
+    "title_today": "Today's schedule",
+    "title_other": "Schedule",
+    "greeting": "Ready to focus today? 🌿",
+    "pick_date": "Pick a date",
+    "prev_day": "Previous day",
+    "next_day": "Next day",
+    "go_today": "Today",
+    "progress": {
+      "title_today": "Today's progress",
+      "title_other": "Progress",
+      "summary": "{done} of {total} tasks done",
+      "badge": {
+        "ready": "Not started",
+        "going": "On track 🚀",
+        "done": "All done 🎉"
+      }
+    },
+    "empty": {
+      "title": "No schedules yet",
+      "body_today": "Nothing planned for today.\nAdd a new goal or a break.",
+      "body_other": "Nothing planned for this day.\nAdd a new goal or a break."
+    }
   }
 }

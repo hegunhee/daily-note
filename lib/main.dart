@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:greenlist/core/themes/app_theme.dart';
+import 'package:greenlist/features/timeline/screens/timeline_screen.dart';
 import 'package:greenlist/setup.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -70,7 +71,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       builder: AppTheme.withSystemOverlay,
-      home: Scaffold(body: Center(child: Text('common.app_name'.tr()))),
+      home: const TimelineScreen(),
     );
   }
 }

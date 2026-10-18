@@ -16,7 +16,9 @@ lib/
 │   ├── models/           # Schedule · SubTask · ScheduleBook · ScheduleStatus
 │   ├── repositories/     # 로컬 DB(Hive) 읽기·쓰기 (schedule_repository)
 │   ├── controllers/      # 여러 화면이 쓰는 상태 (일정 · 보는 날짜 · 지금 시각)
-│   └── util/             # 계산(schedule_calculator) · id 생성
+│   ├── hooks/            # useNow (30초마다 다시 읽는 지금 시각)
+│   ├── util/             # 계산(schedule_calculator) · 표기(schedule_labels) · id 생성
+│   └── widgets/          # 공용 UI (카드 · 배지 · 체크박스 · 버튼 · 진행 바 · 삭제 확인)
 └── features/<feature>/
     ├── models/           # 데이터 모델
     ├── repositories/     # 로컬 DB 읽기·쓰기
@@ -28,7 +30,7 @@ lib/
 - 의존은 **`features → shared → core`** 한 방향(역방향 금지).
   - **core** : 의존성 없이 앱 전체에 적용되는 기능(테마·순수 유틸).
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
-- 하위 폴더는 필요해질 때 만듭니다.
+- feature: `timeline`(메인 — 날짜별 시간순 타임라인). 하위 폴더는 필요해질 때 만듭니다.
 
 ## 로컬 저장
 
@@ -132,6 +134,19 @@ Stitch 시안입니다. 코드에서는 `lib/core/themes/` 가 단일 출처입�
 - 모서리 `AppRadius`: `sm`=4 · `checkbox`=6 · `md`=8(배지·칩) · `lg`=12(카드·입력칸·버튼) ·
   `sheet`=20 · `full`.
 - 탭 대상은 최소 44×44. 넓은 화면에서는 본문을 `AppContentWidth`(최대 480)로 묶습니다.
+
+### 공용 위젯 (`lib/shared/widgets/`)
+
+| 위젯 | 쓰는 곳 |
+|---|---|
+| `AppCard` | 흰 카드 + 1px 테두리. `accentColor` 를 주면 왼쪽 3px 띠(진행 중 일정) |
+| `AppFillButton` | 높이 48 채움 버튼 (primary · secondary) |
+| `AppCheckbox` | 22px 체크박스, 탭 영역 44×44 |
+| `AppBadge` · `AppProgressBar` | 상태 배지 · 6px 진행 바 |
+| `AppPressScale` · `AppTapRow` | 카드·아이콘 / 목록 줄의 누름 반응 |
+| `AppErrorView` · `InlineErrorText` | 조회 실패 + 다시 시도 / 입력·저장 오류 |
+| `confirmDelete` · `showNotice` · `promptRename` | 삭제 확인 · 알릴 자리가 없는 실패 안내 · 이름 고치기 |
+| `confirmDeleteSchedule` · `toggleSubTask` … | 여러 화면이 쓰는 일정 동작 + 실패 안내 |
 
 ## 다국어
 
