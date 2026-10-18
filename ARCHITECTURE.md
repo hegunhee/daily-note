@@ -13,6 +13,10 @@ lib/
 ├── core/                 # 의존성 없이 앱 전체에 적용되는 leaf 코드
 │   └── themes/           # app_palette · app_colors · app_typography · app_spacing · app_layout · app_theme
 ├── shared/               # 여러 feature에서 중복되는 컴포넌트·코드
+│   ├── models/           # Schedule · SubTask · ScheduleBook · ScheduleStatus
+│   ├── repositories/     # 로컬 DB(Hive) 읽기·쓰기 (schedule_repository)
+│   ├── controllers/      # 여러 화면이 쓰는 상태 (일정 · 보는 날짜 · 지금 시각)
+│   └── util/             # 계산(schedule_calculator) · id 생성
 └── features/<feature>/
     ├── models/           # 데이터 모델
     ├── repositories/     # 로컬 DB 읽기·쓰기
@@ -26,6 +30,29 @@ lib/
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
 - 하위 폴더는 필요해질 때 만듭니다.
 
+## 로컬 저장
+
+- [hive_ce](https://pub.dev/packages/hive_ce) 로 기기에 저장합니다. 일정·세부 작업을 상자 하나씩
+  (`schedules` · `sub_tasks`)에 id 를 키로, 모델의 `toJson()` 맵을 값으로 넣습니다(코드 생성 없음).
+- `ScheduleRepository` 만 Hive 를 압니다. 테스트는 `test/helpers/fake_schedule_repository.dart` 의
+  `FakeScheduleRepository` 로 바꿔 끼웁니다.
+- 날짜는 `yyyy-MM-dd`, 시각은 `HH:mm` 문자열로 저장합니다. 모두 기기의 로컬 시간이며, 시간대가
+  바뀌어도 일정 날짜가 밀리지 않습니다. 종료 시각은 시작 시각보다 늦어야 해서 자정을 넘기는
+  일정은 없습니다.
+- 일정을 지우면 그 일정의 세부 작업도 함께 지웁니다. 일정을 폼에서 다시 저장하면 그 일정의
+  세부 작업 목록을 통째로 바꿉니다(빠진 작업은 지움).
+
+## 일정 상태와 진행률
+
+두 값은 서로 다른 개념이라 따로 계산합니다(`shared/util/schedule_calculator.dart`).
+
+- **상태**(`ScheduleStatus`): 사용자가 완료 처리했으면 `done`, 아니면 지금 시각 기준으로
+  시작 전 `upcoming` · 시작~종료 사이 `inProgress` · 종료 후 `past`. 세부 작업과 상관없습니다.
+- **진행률**: 완료한 세부 작업 수 / 전체 수. 작업이 없으면 0%. 반올림하되 다 끝내기 전에는
+  100%로 보이지 않게 99%에서 멈춥니다. 작업이 하나 이상 있고 모두 끝나면 "모든 작업 완료"로 표시합니다.
+- 지금 시각은 `clockProvider` 로 읽습니다. 테스트는 시안의 시각(`designNow`)으로 고정합니다.
+- 체크박스는 누르는 즉시 상태를 바꾸고 저장합니다. 저장에 실패하면 되돌립니다.
+
 ## 데이터 흐름
 
 한 화면은 `Screen → Controller → Repository → 로컬 DB`로 흐릅니다.
@@ -35,6 +62,13 @@ lib/
 - **Controller**: Riverpod. 동기 상태는 `NotifierProvider`, 비동기 상태는
   `AsyncNotifierProvider`. 상태는 **모델 그대로**(`X` · `List<X>` · `AsyncValue<X>`).
   감싸는 State 클래스 없음(예외는 아래 허가 목록).
+```dart
+final scheduleProvider =
+    AsyncNotifierProvider<ScheduleController, ScheduleBook>(
+  ScheduleController.new,
+);
+```
+
 - **Screen**: `HookConsumerWidget`. 저장된 값은 `ref.watch`, 화면에서만 쓰는 값(입력값 ·
   펼침 · 진행 중 플래그 · 애니메이션)은 훅(`useState` · `useTextEditingController` …).
 
