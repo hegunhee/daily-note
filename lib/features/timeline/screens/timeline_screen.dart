@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:greenlist/core/themes/app_colors.dart';
 import 'package:greenlist/core/themes/app_spacing.dart';
 import 'package:greenlist/core/themes/app_typography.dart';
+import 'package:greenlist/features/schedule_detail/screens/schedule_detail_screen.dart';
 import 'package:greenlist/features/schedule_form/screens/schedule_form_screen.dart';
 import 'package:greenlist/features/timeline/widgets/day_progress_card.dart';
 import 'package:greenlist/features/timeline/widgets/schedule_timeline_card.dart';
@@ -178,6 +179,9 @@ class _TimelineBody extends HookConsumerWidget {
                 tasks: subTasksOf(book.subTasks, schedule.id),
                 status: statusOf(schedule, now),
                 isLast: index == schedules.length - 1,
+                onOpen: () => Navigator.of(
+                  context,
+                ).push(ScheduleDetailScreen.route(schedule.id)),
                 onEdit: () => Navigator.of(
                   context,
                 ).push(ScheduleFormScreen.route(schedule: schedule)),

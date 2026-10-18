@@ -95,5 +95,27 @@
       "title": "Please enter a title.",
       "time_range": "End time must be later than start time."
     }
+  },
+  "schedule_detail": {
+    "title": "Schedule",
+    "edit": "Edit",
+    "date": "Date",
+    "time": "Time",
+    "progress": {
+      "title": "Task progress",
+      "count": "({}/{} done)",
+      "hint_empty": "Add tasks to see your progress.",
+      "hint_remaining": "Finish {} more to complete every task.",
+      "hint_done": "Every task is done."
+    },
+    "tasks": "Tasks ({})",
+    "memo": {
+      "title": "Memo",
+      "edit": "Edit",
+      "empty": "No memo yet. Tap Edit to write one.",
+      "hint": "Notes, links, things to bring"
+    },
+    "complete": "Mark as done",
+    "uncomplete": "Mark as not done"
   }
 }

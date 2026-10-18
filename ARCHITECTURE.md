@@ -30,7 +30,7 @@ lib/
 - 의존은 **`features → shared → core`** 한 방향(역방향 금지).
   - **core** : 의존성 없이 앱 전체에 적용되는 기능(테마·순수 유틸).
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
-- feature: `timeline`(메인 — 날짜별 시간순 타임라인) · `schedule_form`(일정 등록·수정). 하위 폴더는 필요해질 때 만듭니다.
+- feature: `timeline`(메인 — 날짜별 시간순 타임라인) · `schedule_form`(일정 등록·수정) · `schedule_detail`(일정 상세 — 세부 작업·메모 관리). 하위 폴더는 필요해질 때 만듭니다.
 
 ## 로컬 저장
 
