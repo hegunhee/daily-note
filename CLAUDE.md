@@ -4,8 +4,11 @@ Claude Code(claude.ai/code)가 이 레포에서 작업할 때 따르는 가이�
 
 ## 프로젝트 개요
 
-**Greenlist** — 날짜별 일정과 일정마다의 세부 작업 체크리스트·메모를 관리하는 앱(iOS · Android).
-Flutter 단일 모듈이며 패키지 이름은 `greenlist` 입니다. **서버 없이 기기의 로컬 DB**에
+**하루기록** (시안 코드명 Greenlist) — 날짜별 일정과 일정마다의 세부 작업 체크리스트·메모를 관리하는 앱(iOS · Android).
+Flutter 단일 모듈이며 Dart 패키지 이름은 `greenlist`, 앱 ID 는 Android `com.example.daily_note` ·
+iOS `com.example.dailyNote` 입니다. 같은 템플릿에서 시작한 포켓가계부(money_diary)는
+`com.example.blueberry_template` 이라, 앱 ID 를 바꿀 때 이 값과 겹치지 않게 합니다(겹치면 기기에서
+서로를 덮어쓰고 데이터가 지워집니다). **서버 없이 기기의 로컬 DB**에
 저장합니다(hive_ce).
 
 - **Flutter 3.41.9**. 로컬은 FVM(`.fvmrc`), CI는 `subosito/flutter-action` 의

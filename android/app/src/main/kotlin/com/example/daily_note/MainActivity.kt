@@ -1,4 +1,4 @@
-package com.example.blueberry_template
+package com.example.daily_note
 
 import io.flutter.embedding.android.FlutterActivity
 
