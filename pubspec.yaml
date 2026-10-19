@@ -27,6 +27,7 @@ dependencies:
   hive_ce_flutter: ^2.3.4
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
   marionette_mcp: ^0.5.0
@@ -48,3 +49,14 @@ flutter:
           weight: 600
         - asset: assets/fonts/Pretendard-Bold.ttf
           weight: 700
+
+# 아이콘 원본은 docs/design/app_icon. 바꾸면 `fvm dart run flutter_launcher_icons` 로 다시 만듭니다.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/images/app_icon.png
+  remove_alpha_ios: true
+  adaptive_icon_background: assets/images/app_icon_background.png
+  adaptive_icon_foreground: assets/images/app_icon_foreground.png
+  # 전경 이미지가 이미 108dp 레이어 기준(가운데 72dp 가 보이는 영역)이라 여백을 더하지 않습니다.
+  adaptive_icon_foreground_inset: 0

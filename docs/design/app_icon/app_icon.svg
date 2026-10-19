@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient (subtle forest depth) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#24734A" />
+      <stop offset="100%" stop-color="#1A5838" />
+    </linearGradient>
+
+    <!-- Inner Plate / Soft highlight -->
+    <linearGradient id="plateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
+    </linearGradient>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0E3320" flood-opacity="0.35" />
+    </filter>
+
+    <filter id="markShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0B2618" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Android Adaptive Icon Squircle Background (Material Design continuous curve) -->
+  <rect x="24" y="24" width="464" height="464" rx="116" fill="url(#bgGrad)" filter="url(#softShadow)" />
+
+  <!-- Subtle inner surface border ring -->
+  <rect x="24" y="24" width="464" height="464" rx="116" fill="none" stroke="url(#plateGrad)" stroke-width="4" />
+
+  <!-- Background decorative geometric micro-lines symbolizing organized list -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round">
+    <line x1="120" y1="140" x2="392" y2="140" />
+    <line x1="120" y1="372" x2="300" y2="372" />
+  </g>
+
+  <!-- Central Rounded Badge Card for ultra-crisp icon legibility at small sizes -->
+  <rect x="100" y="100" width="312" height="312" rx="76" fill="#FFFFFF" filter="url(#markShadow)" />
+
+  <!-- Main Checkmark & Sprout Symbol -->
+  <g id="symbol">
+    <!-- Solid, balanced checkmark stroke in Brand Forest Green -->
+    <path d="M168 256 L228 316 L344 196" 
+          fill="none" 
+          stroke="#24734A" 
+          stroke-width="38" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+
+    <!-- Organic Sprout / Leaf growing from the checkmark corner -->
+    <path d="M344 196 C344 150 376 132 400 132 C400 156 382 188 344 196 Z" 
+          fill="#34A86A" />
+
+    <!-- Accent Dot (Secondary Brand Color: Energetic Orange #F28C45 - represents active / now task indicator) -->
+    <circle cx="366" cy="142" r="16" fill="#F28C45" stroke="#FFFFFF" stroke-width="4" />
+  </g>
+</svg>
