@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 날짜 하루 안에 시작·종료 시각이 있는 일정 한 건
+/// 시작 날짜·시각부터 종료 날짜·시각까지 이어지는 일정 한 건
 ///
-/// 날짜·시각은 기기의 로컬 시간 기준입니다. 종료 시각은 시작 시각보다 늦어야 하며,
-/// 자정을 넘기는 일정은 두지 않습니다.
+/// 날짜·시각은 기기의 로컬 시간 기준입니다. 종료 날짜를 시작 날짜보다 뒤로 두면 며칠에
+/// 걸친 일정이 되고, 종료 시점은 시작 시점보다 늦어야 합니다.
 class Schedule {
   const Schedule({
     required this.id,
@@ -13,14 +13,20 @@ class Schedule {
     required this.endTime,
     required this.createdAt,
     required this.updatedAt,
+    DateTime? endDate,
     this.memo = '',
     this.isCompleted = false,
-  });
+  }) : endDate = endDate ?? date;
 
   factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
     id: json['id'] as String,
     title: json['title'] as String,
     date: _parseDate(json['date'] as String),
+    // 기간을 넣기 전에 저장한 일정은 하루짜리입니다.
+    endDate: switch (json['endDate']) {
+      final String text => _parseDate(text),
+      _ => null,
+    },
     startTime: _parseTime(json['startTime'] as String),
     endTime: _parseTime(json['endTime'] as String),
     memo: json['memo'] as String? ?? '',
@@ -33,8 +39,11 @@ class Schedule {
 
   final String title;
 
-  /// 일정 날짜. 시각 없이 그날 0시로 둡니다.
+  /// 시작 날짜. 시각 없이 그날 0시로 둡니다.
   final DateTime date;
+
+  /// 종료 날짜. 하루짜리 일정이면 [date]와 같습니다.
+  final DateTime endDate;
 
   final TimeOfDay startTime;
 
@@ -53,6 +62,7 @@ class Schedule {
   Schedule copyWith({
     String? title,
     DateTime? date,
+    DateTime? endDate,
     TimeOfDay? startTime,
     TimeOfDay? endTime,
     String? memo,
@@ -62,6 +72,7 @@ class Schedule {
     id: id,
     title: title ?? this.title,
     date: date ?? this.date,
+    endDate: endDate ?? this.endDate,
     startTime: startTime ?? this.startTime,
     endTime: endTime ?? this.endTime,
     memo: memo ?? this.memo,
@@ -75,6 +86,7 @@ class Schedule {
     'title': title,
     // 시간대가 바뀌어도 날짜가 밀리지 않게 달력 날짜 문자열로 저장합니다.
     'date': _formatDate(date),
+    'endDate': _formatDate(endDate),
     'startTime': _formatTime(startTime),
     'endTime': _formatTime(endTime),
     'memo': memo,

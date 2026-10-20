@@ -27,6 +27,77 @@ void main() {
     ]);
   });
 
+  test('며칠에 걸친 일정은 기간 안의 날마다 보이고, 이어지는 날에는 맨 위에 선다', () {
+    final goal = testSchedule(
+      id: 'goal',
+      date: DateTime(2025, 5, 13),
+      endDate: DateTime(2025, 5, 15),
+      start: const TimeOfDay(hour: 20, minute: 0),
+    );
+    final book = designBook();
+    final schedules = [...book.schedules, goal];
+
+    expect(schedulesOn(schedules, DateTime(2025, 5, 12)), isEmpty);
+    expect(schedulesOn(schedules, DateTime(2025, 5, 13)).map((s) => s.id), [
+      'goal',
+    ]);
+    expect(schedulesOn(schedules, designNow).map((s) => s.id), [
+      'goal',
+      'meeting',
+      'wireframe',
+      'review',
+    ]);
+    expect(schedulesOn(schedules, DateTime(2025, 5, 15)).map((s) => s.id), [
+      'goal',
+      'tomorrow',
+    ]);
+    expect(schedulesOn(schedules, DateTime(2025, 5, 16)), isEmpty);
+  });
+
+  test('종료 날짜가 뒤면 종료 시각이 시작 시각보다 일러도 올바른 기간이다', () {
+    const nine = TimeOfDay(hour: 9, minute: 0);
+    const eight = TimeOfDay(hour: 8, minute: 0);
+    final day = DateTime(2025, 5, 14);
+
+    expect(
+      isValidPeriod(
+        startDate: day,
+        start: nine,
+        endDate: DateTime(2025, 5, 15),
+        end: eight,
+      ),
+      isTrue,
+    );
+    expect(
+      isValidPeriod(startDate: day, start: nine, endDate: day, end: eight),
+      isFalse,
+    );
+    expect(
+      isValidPeriod(
+        startDate: day,
+        start: eight,
+        endDate: DateTime(2025, 5, 13),
+        end: nine,
+      ),
+      isFalse,
+    );
+  });
+
+  test('며칠에 걸친 일정은 시작 날짜부터 종료 날짜의 종료 시각까지 진행 중이다', () {
+    final goal = testSchedule(
+      id: 'goal',
+      date: DateTime(2025, 5, 13),
+      endDate: DateTime(2025, 5, 15),
+      start: const TimeOfDay(hour: 20, minute: 0),
+      end: const TimeOfDay(hour: 9, minute: 0),
+    );
+
+    expect(statusOf(goal, DateTime(2025, 5, 13, 19)), ScheduleStatus.upcoming);
+    expect(statusOf(goal, DateTime(2025, 5, 14, 3)), ScheduleStatus.inProgress);
+    expect(statusOf(goal, DateTime(2025, 5, 15, 9)), ScheduleStatus.past);
+    expect(durationMinutes(goal), (24 + 13) * 60);
+  });
+
   test('세부 작업이 없으면 진행률은 0%이고 완료로 보지 않는다', () {
     expect(progressOf([]), 0);
     expect(progressPercent([]), 0);

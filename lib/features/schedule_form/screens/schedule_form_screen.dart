@@ -25,7 +25,7 @@ import 'package:greenlist/shared/widgets/sub_task_input_field.dart';
 import 'package:greenlist/shared/widgets/sub_task_tile.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// 일정 등록·수정 — 제목·날짜·시각·세부 작업·메모를 한 번에 저장합니다.
+/// 일정 등록·수정 — 제목·날짜(기간)·시각·세부 작업·메모를 한 번에 저장합니다.
 ///
 /// [schedule]을 주면 그 일정을 고칩니다. 시안: `docs/design/screens/schedule_form`
 class ScheduleFormScreen extends HookConsumerWidget {
@@ -96,6 +96,8 @@ class _ScheduleForm extends HookConsumerWidget {
     final title = useTextEditingController(text: editing?.title);
     final memo = useTextEditingController(text: editing?.memo);
     final date = useState(editing?.date ?? defaultDate);
+    final multiDay = useState(editing != null && isMultiDay(editing));
+    final endDate = useState(editing?.endDate ?? _nextDay(defaultDate));
     final start = useState(editing?.startTime ?? defaultStart);
     final end = useState(
       editing?.endTime ??
@@ -108,9 +110,12 @@ class _ScheduleForm extends HookConsumerWidget {
     final taskInputFocus = useFocusNode();
     useListenable(title);
 
+    final lastDate = multiDay.value ? endDate.value : date.value;
     final errors = validateSchedule(
       title: title.text,
+      startDate: date.value,
       start: start.value,
+      endDate: lastDate,
       end: end.value,
     );
     // 시간 범위는 고르는 즉시, 제목은 저장을 한 번 눌러 본 뒤부터 알립니다.
@@ -122,6 +127,8 @@ class _ScheduleForm extends HookConsumerWidget {
       title.clear();
       memo.clear();
       date.value = defaultDate;
+      multiDay.value = false;
+      endDate.value = _nextDay(defaultDate);
       start.value = defaultStart;
       end.value = TimeOfDay(
         hour: defaultStart.hour + 1,
@@ -132,6 +139,14 @@ class _ScheduleForm extends HookConsumerWidget {
       saveFailed.value = false;
     }
 
+    // 시작일을 종료일 이후로 옮기면 종료일도 시작 다음 날로 밀어 기간이 뒤집히지 않게 합니다.
+    void selectStart(DateTime picked) {
+      date.value = picked;
+      if (daysBetween(picked, endDate.value) < 1) {
+        endDate.value = _nextDay(picked);
+      }
+    }
+
     Future<void> pickDate() async {
       final picked = await showDatePicker(
         context: context,
@@ -140,7 +155,20 @@ class _ScheduleForm extends HookConsumerWidget {
         lastDate: DateTime(today.year + 5, 12, 31),
       );
       if (picked != null) {
-        date.value = picked;
+        selectStart(picked);
+      }
+    }
+
+    Future<void> pickEndDate() async {
+      final first = _nextDay(date.value);
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: endDate.value.isBefore(first) ? first : endDate.value,
+        firstDate: first,
+        lastDate: DateTime(today.year + 5, 12, 31),
+      );
+      if (picked != null) {
+        endDate.value = picked;
       }
     }
 
@@ -200,6 +228,7 @@ class _ScheduleForm extends HookConsumerWidget {
         id: id,
         title: title.text.trim(),
         date: date.value,
+        endDate: lastDate,
         startTime: start.value,
         endTime: end.value,
         memo: memo.text.trim(),
@@ -299,10 +328,22 @@ class _ScheduleForm extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _DateField(
+                    label: multiDay.value
+                        ? 'schedule_form.start_date'.tr()
+                        : null,
                     date: date.value,
                     isToday: DateUtils.isSameDay(date.value, today),
                     onTap: pickDate,
                   ),
+                  if (multiDay.value) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    _DateField(
+                      label: 'schedule_form.end_date'.tr(),
+                      date: endDate.value,
+                      isToday: false,
+                      onTap: pickEndDate,
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.sm),
                   Wrap(
                     spacing: AppSpacing.sm,
@@ -313,23 +354,40 @@ class _ScheduleForm extends HookConsumerWidget {
                           args: [shortDateLabel(today)],
                         ),
                         selected: DateUtils.isSameDay(date.value, today),
-                        onTap: () => date.value = today,
+                        onTap: () => selectStart(today),
                       ),
                       _QuickDateChip(
                         label: 'schedule_form.quick.tomorrow'.tr(
                           args: [shortDateLabel(tomorrow)],
                         ),
                         selected: DateUtils.isSameDay(date.value, tomorrow),
-                        onTap: () => date.value = tomorrow,
+                        onTap: () => selectStart(tomorrow),
                       ),
                       if (friday != null &&
                           !DateUtils.isSameDay(friday, tomorrow))
                         _QuickDateChip(
                           label: 'schedule_form.quick.friday'.tr(),
                           selected: DateUtils.isSameDay(date.value, friday),
-                          onTap: () => date.value = friday,
+                          onTap: () => selectStart(friday),
                         ),
                     ],
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  SwitchListTile.adaptive(
+                    value: multiDay.value,
+                    onChanged: (value) {
+                      multiDay.value = value;
+                      if (value && daysBetween(date.value, endDate.value) < 1) {
+                        endDate.value = _nextDay(date.value);
+                      }
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      'schedule_form.multi_day'.tr(),
+                      style: AppTypography.labelLg.copyWith(
+                        color: colors.textPrimary,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -368,7 +426,10 @@ class _ScheduleForm extends HookConsumerWidget {
                       'schedule_form.duration'.tr(
                         args: [
                           durationLabel(
-                            minutesOf(end.value) - minutesOf(start.value),
+                            daysBetween(date.value, lastDate) *
+                                    Duration.minutesPerDay +
+                                minutesOf(end.value) -
+                                minutesOf(start.value),
                           ),
                         ],
                       ),
@@ -458,14 +519,21 @@ class _ScheduleForm extends HookConsumerWidget {
     final next = now.hour + 1;
     return TimeOfDay(hour: next > 22 ? 22 : next, minute: 0);
   }
+
+  static DateTime _nextDay(DateTime day) =>
+      DateTime(day.year, day.month, day.day + 1);
 }
 
 class _DateField extends StatelessWidget {
   const _DateField({
+    required this.label,
     required this.date,
     required this.isToday,
     required this.onTap,
   });
+
+  /// 기간을 고를 때 `시작일` · `종료일`. 하루짜리면 null 입니다.
+  final String? label;
 
   final DateTime date;
 
@@ -477,7 +545,8 @@ class _DateField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final radius = BorderRadius.circular(AppRadius.lg);
-    return DecoratedBox(
+    final label = this.label;
+    final field = DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: radius,
@@ -523,6 +592,20 @@ class _DateField extends StatelessWidget {
           ),
         ),
       ),
+    );
+    if (label == null) {
+      return field;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTypography.labelSm.copyWith(color: colors.textTertiary),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        field,
+      ],
     );
   }
 }

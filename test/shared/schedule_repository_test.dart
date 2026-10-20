@@ -51,6 +51,23 @@ void main() {
     expect(tasks.map((t) => t.isCompleted), [true, false]);
   });
 
+  test('기간을 넣기 전에 저장한 일정은 종료 날짜가 시작 날짜와 같은 하루짜리로 읽힌다', () async {
+    final legacy = testSchedule(id: 'old').toJson()..remove('endDate');
+    await (await Hive.openBox<Map<dynamic, dynamic>>(
+      'schedules',
+    )).put('old', legacy);
+    final repository = ScheduleRepository();
+    await repository.saveScheduleWithTasks(
+      testSchedule(id: 'goal', endDate: DateTime(2025, 5, 20)),
+      const [],
+    );
+
+    final book = await (await reopen()).load();
+
+    expect(book.scheduleById('old')!.endDate, DateTime(2025, 5, 14));
+    expect(book.scheduleById('goal')!.endDate, DateTime(2025, 5, 20));
+  });
+
   test('일정을 다시 저장하면 목록에서 빠진 세부 작업은 지워진다', () async {
     final repository = ScheduleRepository();
     final schedule = testSchedule(id: 's');
