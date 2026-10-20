@@ -146,9 +146,14 @@ class _CardBody extends ConsumerWidget {
                     children: [
                       Icon(Icons.schedule_rounded, size: 15, color: timeColor),
                       const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        timeRangeLabel(schedule),
-                        style: AppTypography.timeSm.copyWith(color: timeColor),
+                      // 며칠에 걸친 일정은 날짜까지 적어 길어지므로 좁으면 줄을 바꿉니다.
+                      Flexible(
+                        child: Text(
+                          timeRangeLabel(schedule),
+                          style: AppTypography.timeSm.copyWith(
+                            color: timeColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),

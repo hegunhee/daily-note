@@ -85,6 +85,7 @@ class FakeScheduleRepository implements ScheduleRepository {
 Schedule testSchedule({
   required String id,
   DateTime? date,
+  DateTime? endDate,
   TimeOfDay start = const TimeOfDay(hour: 9, minute: 0),
   TimeOfDay end = const TimeOfDay(hour: 10, minute: 0),
   String title = '일정',
@@ -96,6 +97,7 @@ Schedule testSchedule({
     id: id,
     title: title,
     date: at,
+    endDate: endDate,
     startTime: start,
     endTime: end,
     memo: memo,

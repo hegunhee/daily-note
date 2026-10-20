@@ -84,7 +84,7 @@ class _TimelineBody extends HookConsumerWidget {
     final isToday = DateUtils.isSameDay(selected, today);
     final schedules = schedulesOn(book.schedules, selected);
     final scheduledDays = {
-      for (final schedule in book.schedules) DateUtils.dateOnly(schedule.date),
+      for (final schedule in book.schedules) ...daysOf(schedule),
     };
 
     Future<void> pickDate() async {

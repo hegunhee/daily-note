@@ -52,6 +52,33 @@ void main() {
     ]);
   });
 
+  testWidgets('여러 날에 걸쳐 진행을 켜고 저장하면 다음 날까지의 기간으로 타임라인에 보인다', (
+    tester,
+  ) async {
+    final repository = await pumpApp(
+      tester,
+      const TimelineScreen(),
+      size: _tall,
+    );
+
+    await tester.tap(find.text('새 일정 추가'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).first, '기획서 마무리');
+    await tester.tap(find.text('여러 날에 걸쳐 진행'));
+    await tester.pumpAndSettle();
+    expect(find.text('종료일'), findsOneWidget);
+    expect(find.text('총 1일 1시간 소요 예정'), findsOneWidget);
+    await tester.tap(find.text('일정 저장하기'));
+    await tester.pumpAndSettle();
+
+    final saved = repository.book.schedules.firstWhere(
+      (s) => s.title == '기획서 마무리',
+    );
+    expect(saved.date, DateTime(2025, 5, 14));
+    expect(saved.endDate, DateTime(2025, 5, 15));
+    expect(find.text('5/14 12:00 - 5/15 13:00'), findsOneWidget);
+  });
+
   testWidgets('제목이 비어 있으면 저장하지 않고 제목 아래에 알린다', (tester) async {
     final repository = await pumpApp(
       tester,

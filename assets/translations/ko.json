@@ -12,7 +12,9 @@
     "duration": {
       "minutes": "{}분",
       "hours": "{}시간",
-      "hours_minutes": "{}시간 {}분"
+      "hours_minutes": "{}시간 {}분",
+      "days": "{}일",
+      "days_hours": "{}일 {}시간"
     },
     "today": "오늘"
   },
@@ -77,6 +79,9 @@
     "field_title": "일정 제목",
     "title_hint": "무엇을 할 예정인가요?",
     "field_date": "날짜",
+    "multi_day": "여러 날에 걸쳐 진행",
+    "start_date": "시작일",
+    "end_date": "종료일",
     "quick": {
       "today": "오늘 ({})",
       "tomorrow": "내일 ({})",

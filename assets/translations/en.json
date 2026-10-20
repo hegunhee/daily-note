@@ -12,7 +12,9 @@
     "duration": {
       "minutes": "{} min",
       "hours": "{} h",
-      "hours_minutes": "{} h {} min"
+      "hours_minutes": "{} h {} min",
+      "days": "{} d",
+      "days_hours": "{} d {} h"
     },
     "today": "Today"
   },
@@ -77,6 +79,9 @@
     "field_title": "Title",
     "title_hint": "What are you planning?",
     "field_date": "Date",
+    "multi_day": "Spans multiple days",
+    "start_date": "Start date",
+    "end_date": "End date",
     "quick": {
       "today": "Today ({})",
       "tomorrow": "Tomorrow ({})",

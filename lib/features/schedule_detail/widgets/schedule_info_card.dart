@@ -10,7 +10,7 @@ import 'package:greenlist/shared/util/schedule_labels.dart';
 import 'package:greenlist/shared/widgets/app_badge.dart';
 import 'package:greenlist/shared/widgets/app_card.dart';
 
-/// 일정 제목과 날짜·시각·소요 시간
+/// 일정 제목과 날짜(기간)·시각·소요 시간
 class ScheduleInfoCard extends StatelessWidget {
   const ScheduleInfoCard({
     required this.schedule,
@@ -53,7 +53,7 @@ class ScheduleInfoCard extends StatelessWidget {
                     icon: Icons.calendar_today_outlined,
                     label: 'schedule_detail.date'.tr(),
                     child: Text(
-                      fullDateLabel(context, schedule.date),
+                      dateRangeLabel(context, schedule),
                       style: AppTypography.bodyLg.copyWith(
                         color: colors.textPrimary,
                       ),

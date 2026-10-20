@@ -32,8 +32,13 @@ class ScheduleController extends AsyncNotifier<ScheduleBook> {
     Schedule schedule,
     List<SubTask> subTasks,
   ) async {
-    if (!isValidTimeRange(schedule.startTime, schedule.endTime)) {
-      throw ArgumentError('종료 시각은 시작 시각보다 늦어야 합니다.');
+    if (!isValidPeriod(
+      startDate: schedule.date,
+      start: schedule.startTime,
+      endDate: schedule.endDate,
+      end: schedule.endTime,
+    )) {
+      throw ArgumentError('종료 시점은 시작 시점보다 늦어야 합니다.');
     }
     final book = await future;
     await _repository.saveScheduleWithTasks(schedule, subTasks);
